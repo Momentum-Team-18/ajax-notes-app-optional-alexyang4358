@@ -5,7 +5,8 @@ let userInputB = document.querySelector(".textarea");
 let userInputC = document.querySelector("#delete-input");
 let submitButton = document.querySelector("#submit-button");
 let deleteButton = document.querySelector("#delete-button");
-let display = document.querySelector(".card");
+let display = document.querySelector(".box");
+
 
 //-----------GET Function Start
 
@@ -18,23 +19,26 @@ let getFunction = function(){fetch(notesURL, {
 ))
 
 .then((body) => {
+    display.innerHTML = " ";
     console.log(body)
     for (let input of body) {
         console.log(input.title)
-    let inputEl = document.createElement ("div");
+    
+    let noteInfo = document.createElement ("div");
+    display.appendChild(noteInfo);
+    noteInfo.classList.add("card");
+
+    let inputEl = document.createElement ("h1");
     inputEl.innerText = input.title
-    inputEl.classList.add("card");
-    display.appendChild(inputEl);
+    noteInfo.appendChild(inputEl);
 
     let inputEl1 = document.createElement("div");
     inputEl1.innerText = input.body
-    inputEl1.classList.add("card");
-    display.appendChild(inputEl1);
+    noteInfo.appendChild(inputEl1);
 
     let inputEl2 = document.createElement("div");
     inputEl2.innerText = input.id
-    inputEl2.classList.add("card");
-    display.appendChild(inputEl2);
+    noteInfo.appendChild(inputEl2);
     }
 })}
 //-----------GET Function End
@@ -59,7 +63,6 @@ let postFunction = function(){ fetch(notesURL, {
 //-----------POST Function End
 
 //-----------DELETE Function Start
-
 fetch(notesURL, {
     method: "GET",
     headers: {"Content-Type": "application/json"}, 
@@ -76,7 +79,6 @@ fetch(notesURL, {
 
 let deleteFunction = function(){ fetch(`http://localhost:3000/notes/${userInputC.value}`, {
     method: 'DELETE',
-    // body: JSON.stringify({"id": userInputC.value})
 })
 
 .then(response => response.json(
@@ -87,10 +89,7 @@ let deleteFunction = function(){ fetch(`http://localhost:3000/notes/${userInputC
     console.log(body)
     return(body)
 })
-
 }
-
-
 //-----------DELETE Function End
 
 //-----------SUBMIT Button Start
@@ -102,11 +101,13 @@ submitButton.addEventListener("click", (event) => {
 //-----------SUBMIT Button End
 
 //-----------DELETE Button Start
-
-
 deleteButton.addEventListener("click", (event) => {
     event.preventDefault();
     deleteFunction();
+    getFunction();  
 })
+//-----------DELETE Button End
+
 
 getFunction();
+// displays get request first
